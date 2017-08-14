@@ -1,0 +1,35 @@
+{
+  "name": "emi-oauth2-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc & node ./src/app.js",
+    "deploy": "tsc & ssh-deployer -f deploy.json --host 192.168.46.112 --username username --password password --workspace ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barend-erasmus/emi-oauth2-framework.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barend-erasmus/emi-oauth2-framework/issues"
+  },
+  "homepage": "https://github.com/barend-erasmus/emi-oauth2-framework#readme",
+  "dependencies": {
+    "activedirectory": "^0.7.2",
+    "body-parser": "^1.17.2",
+    "co": "^4.6.0",
+    "express": "^4.15.4",
+    "express-winston": "^2.4.0",
+    "oauth2-framework": "^0.3.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "winston": "^2.3.1",
+    "yargs": "^8.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.20"
+  }
+}

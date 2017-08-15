@@ -32,6 +32,8 @@ app.use('/auth', OAuth2FrameworkRouter(
                 return Promise.resolve(new Client('Internal - Passport', '88MHne8ije', 'KI69NoJ0uO', [], ['http://localhost:3000/auth/passport/callback', 'http://cpt.innovation.euromonitor.local/auth/passport/callback', 'http://localhost:4200/callback', 'http://parkingapp.euromonitor.local/web/callback'], true));
             } else if (clientId === 'FUmCsF9c2D') {
                 return Promise.resolve(new Client('Feature Toggle', 'FUmCsF9c2D', '4vmPj7eGVp', [], ['http://localhost:4200/callback', 'http://cpt.innovation.euromonitor.local/featuretoggle/callback'], true));
+            }else if (clientId === '2KDgqcZ0bD') {
+                return Promise.resolve(new Client('Tech Radar', '2KDgqcZ0bD', 'jrv8GdrDKv', [], ['http://localhost:4200/callback', 'http://cpt.innovation.euromonitor.local/techradar/callback'], true));
             } else {
                 return Promise.resolve(null);
             }

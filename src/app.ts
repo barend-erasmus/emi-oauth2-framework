@@ -27,7 +27,7 @@ app.use('/auth', OAuth2FrameworkRouter(
     {
         findClient: (clientId: string) => {
             if (clientId === '0zyrWYATtw') {
-                return Promise.resolve(new Client('FDM - Parking App', '0zyrWYATtw', 'x3h8CTB2Cj', [], ['http://localhost:4200/callback', 'http://parkingapp.euromonitor.local/web/callback'], true));
+                return Promise.resolve(new Client('Parking App', '0zyrWYATtw', 'x3h8CTB2Cj', [], ['http://localhost:4200/#/callback', 'http://parkingapp.euromonitor.local/web/#/callback'], true));
             } else if (clientId === '88MHne8ije') {
                 return Promise.resolve(new Client('Internal - Passport', '88MHne8ije', 'KI69NoJ0uO', [], ['http://localhost:3000/auth/passport/callback', 'http://cpt.innovation.euromonitor.local/auth/passport/callback', 'http://localhost:4200/callback', 'http://parkingapp.euromonitor.local/web/callback'], true));
             } else if (clientId === 'FUmCsF9c2D') {

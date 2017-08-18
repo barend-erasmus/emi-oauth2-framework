@@ -1,7 +1,6 @@
 // http://localhost:3000/auth/authorize?response_type=code&client_id=0zyrWYATtw&redirect_uri=http://localhost:3000/auth/passport/callback&state=40335
 
 // Imports
-import * as co from 'co';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as path from 'path';
@@ -124,78 +123,72 @@ app.use('/auth', OAuth2FrameworkRouter(
 ));
 
 
-app.get('/auth/passport/callback', (req: express.Request, res: express.Response) => {
+app.get('/auth/passport/callback', async (req: express.Request, res: express.Response) => {
 
     const client_id = '88MHne8ije';
     const client_secret = 'KI69NoJ0uO';
     const redirect_uri = argv.prod ? 'http://cpt.innovation.euromonitor.local/auth/passport/callback' : 'http://localhost:3000/auth/passport/callback';
     const trinityApiUri = 'http://trinity.euromonitor.com';
 
-    co(function* () {
-        const response1 = yield request({
-            body: {
-                client_id: client_id,
-                client_secret: client_secret,
-                code: req.query.code,
-                redirect_uri: redirect_uri,
-                grant_type: 'authorization_code'
-            },
-            method: 'POST',
-            uri: argv.prod ? `http://cpt.innovation.euromonitor.local/auth/token` : `http://localhost:3000/auth/token`,
-            json: true,
-            resolveWithFullResponse: true,
-        });
-
-        if (response1.statusCode !== 200) {
-            res.status(500).json({
-
-            });
-            return;
-        }
-
-        const response2 = yield request({
-            method: 'GET',
-            uri: argv.prod ? `http://cpt.innovation.euromonitor.local/auth/user` : `http://localhost:3000/auth/user`,
-            headers: {
-                Authorization: `Bearer ${response1.body.access_token}`,
-            },
-            json: true,
-            resolveWithFullResponse: true,
-        });
-
-        if (response2.statusCode !== 200) {
-            res.status(500).json({
-
-            });
-            return;
-        }
-
-        const response3 = yield request({
-            method: 'POST',
-            uri: `${trinityApiUri}/api/auth/token`,
-            body: {
-                SubscriberId: req.query.state,
-                Username: `EURO_NT\\${response2.body.username}`,
-                ApplicationId: 1,
-            },
-            json: true,
-            resolveWithFullResponse: true,
-        });
-
-        if (response3.statusCode !== 200) {
-
-            res.status(500).json({
-
-            });
-            return;
-        }
-
-        res.redirect(`http://portal.euromonitor.com/Portal?ClearClaim=true&AuthToken=${response3.body}`);
-
-    }).catch((err: Error) => {
-        console.error(err.message, err);
-        res.status(500).send(err.message);
+    const response1 = await request({
+        body: {
+            client_id: client_id,
+            client_secret: client_secret,
+            code: req.query.code,
+            redirect_uri: redirect_uri,
+            grant_type: 'authorization_code'
+        },
+        method: 'POST',
+        uri: argv.prod ? `http://cpt.innovation.euromonitor.local/auth/token` : `http://localhost:3000/auth/token`,
+        json: true,
+        resolveWithFullResponse: true,
     });
+
+    if (response1.statusCode !== 200) {
+        res.status(500).json({
+
+        });
+        return;
+    }
+
+    const response2 = await request({
+        method: 'GET',
+        uri: argv.prod ? `http://cpt.innovation.euromonitor.local/auth/user` : `http://localhost:3000/auth/user`,
+        headers: {
+            Authorization: `Bearer ${response1.body.access_token}`,
+        },
+        json: true,
+        resolveWithFullResponse: true,
+    });
+
+    if (response2.statusCode !== 200) {
+        res.status(500).json({
+
+        });
+        return;
+    }
+
+    const response3 = await request({
+        method: 'POST',
+        uri: `${trinityApiUri}/api/auth/token`,
+        body: {
+            SubscriberId: req.query.state,
+            Username: `EURO_NT\\${response2.body.username}`,
+            ApplicationId: 1,
+        },
+        json: true,
+        resolveWithFullResponse: true,
+    });
+
+    if (response3.statusCode !== 200) {
+
+        res.status(500).json({
+
+        });
+        return;
+    }
+
+    res.redirect(`http://portal.euromonitor.com/Portal?ClearClaim=true&AuthToken=${response3.body}`);
 });
 
 app.listen(argv.port || 3000, () => {

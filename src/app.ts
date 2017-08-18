@@ -27,19 +27,64 @@ app.use('/auth', OAuth2FrameworkRouter(
     {
         findClient: (clientId: string) => {
             if (clientId === '0zyrWYATtw') {
-                return Promise.resolve(new Client('Parking App', '0zyrWYATtw', 'x3h8CTB2Cj', [], ['http://localhost:4200/#/callback', 'http://parkingapp.euromonitor.local/web/#/callback'], true));
+                return Promise.resolve(new Client(
+                    'Parking App',
+                    '0zyrWYATtw',
+                    'x3h8CTB2Cj',
+                    [], [
+                        'http://localhost:4200/#/callback',
+                        'http://parkingapp.euromonitor.local/web/#/callback'
+                    ],
+                    true,
+                    false,
+                ));
             } else if (clientId === '88MHne8ije') {
-                return Promise.resolve(new Client('Internal - Passport', '88MHne8ije', 'KI69NoJ0uO', [], ['http://localhost:3000/auth/passport/callback', 'http://cpt.innovation.euromonitor.local/auth/passport/callback', 'http://localhost:4200/callback', 'http://parkingapp.euromonitor.local/web/callback'], true));
+                return Promise.resolve(new Client(
+                    'Internal - Passport',
+                    '88MHne8ije',
+                    'KI69NoJ0uO',
+                    [],
+                    [
+                        'http://localhost:3000/auth/passport/callback',
+                        'http://cpt.innovation.euromonitor.local/auth/passport/callback',
+                        'http://localhost:4200/callback',
+                        'http://parkingapp.euromonitor.local/web/callback'],
+                    true,
+                    false,
+                ));
             } else if (clientId === 'FUmCsF9c2D') {
-                return Promise.resolve(new Client('Feature Toggle', 'FUmCsF9c2D', '4vmPj7eGVp', [], ['http://localhost:4200/callback', 'http://cpt.innovation.euromonitor.local/featuretoggle/callback'], true));
-            }else if (clientId === '2KDgqcZ0bD') {
-                return Promise.resolve(new Client('Tech Radar', '2KDgqcZ0bD', 'jrv8GdrDKv', [], ['http://localhost:4200/callback', 'http://cpt.innovation.euromonitor.local/techradar/callback'], true));
+                return Promise.resolve(new Client(
+                    'Feature Toggle',
+                    'FUmCsF9c2D',
+                    '4vmPj7eGVp',
+                    [],
+                    [
+                        'http://localhost:4200/callback',
+                        'http://cpt.innovation.euromonitor.local/featuretoggle/callback'
+                    ],
+                    true,
+                    false,
+                ));
+            } else if (clientId === '2KDgqcZ0bD') {
+                return Promise.resolve(new Client(
+                    'Tech Radar',
+                    '2KDgqcZ0bD',
+                    'jrv8GdrDKv',
+                    [],
+                    ['http://localhost:4200/callback',
+                        'http://cpt.innovation.euromonitor.local/techradar/callback'
+                    ],
+                    true,
+                    false,
+                ));
             } else {
                 return Promise.resolve(null);
             }
         },
+        register: null,
         resetPassword: null,
         sendForgotPasswordEmail: null,
+        sendVerificationEmail: null,
         validateCredentials: (clientId: string, username: string, password: string) => {
             return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
 
@@ -63,9 +108,15 @@ app.use('/auth', OAuth2FrameworkRouter(
                     }
                 });
             });
-        }
+        },
+        verify: null,
     },
     path.join(__dirname, 'views/login.handlebars'),
+    null,
+    null,
+    null,
+    null,
+    null,
     null,
     null,
     null,

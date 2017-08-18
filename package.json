@@ -24,7 +24,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "express-winston": "^2.4.0",
-    "oauth2-framework": "^0.3.3",
+    "oauth2-framework": "^0.4.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "winston": "^2.3.1",

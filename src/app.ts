@@ -7,6 +7,7 @@ import * as path from 'path';
 import * as yargs from 'yargs';
 import * as request from 'request-promise';
 import * as cors from 'cors';
+import * as winston from 'winston';
 
 import * as ActiveDirectory from 'activedirectory';
 
@@ -14,6 +15,8 @@ import { Client, OAuth2FrameworkRouter } from 'oauth2-framework';
 
 const argv = yargs.argv;
 const app = express();
+
+winston.add(winston.transports.File, { filename: path.join(__dirname, 'emi-oauth2-framework.log') });
 
 app.set('trust proxy', true);
 
@@ -86,6 +89,7 @@ app.use('/auth', OAuth2FrameworkRouter(
         sendVerificationEmail: null,
         validateCredentials: (clientId: string, username: string, password: string) => {
             return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
+                winston.info(`validateCredentials('${clientId}', '${username}', '${password}')`);
 
                 const configuration = {
                     url: 'ldap://EUROCT1.euromonitor.local',

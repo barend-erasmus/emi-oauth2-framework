@@ -62,7 +62,8 @@ app.use('/auth', OAuth2FrameworkRouter(
                     [],
                     [
                         'http://localhost:4200/callback',
-                        'http://192.168.46.102:9002/callback'
+                        'http://192.168.46.102:9002/callback',
+                        'http://feature-toggle.euromonitor.local/callback'
                     ],
                     true,
                     false,

@@ -37,7 +37,7 @@ app.use('/auth', OAuth2FrameworkRouter(
                         'http://localhost:4200/#/callback',
                         'http://parkingapp.euromonitor.local/web/#/callback'
                     ],
-                    true,
+                    false,
                     false,
                 ));
             } else if (clientId === '88MHne8ije') {
@@ -59,7 +59,7 @@ app.use('/auth', OAuth2FrameworkRouter(
                     'Feature Toggle',
                     'FUmCsF9c2D',
                     '4vmPj7eGVp',
-                    [],
+                    ['admin'],
                     [
                         'http://localhost:4200/callback',
                         'http://192.168.46.102:9002/callback',
@@ -68,26 +68,34 @@ app.use('/auth', OAuth2FrameworkRouter(
                     true,
                     false,
                 ));
-            } else if (clientId === '2KDgqcZ0bD') {
-                return Promise.resolve(new Client(
-                    'Tech Radar',
-                    '2KDgqcZ0bD',
-                    'jrv8GdrDKv',
-                    [],
-                    ['http://localhost:4200/callback',
-                        'http://cpt.innovation.euromonitor.local/techradar/callback'
-                    ],
-                    true,
-                    false,
-                ));
             } else {
                 return Promise.resolve(null);
             }
         },
-        register: null,
-        resetPassword: null,
-        sendForgotPasswordEmail: null,
-        sendVerificationEmail: null,
+        generateAccessToken: (client_id: string, username: string, scopes: string[], request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        generateCode: (client_id: string, username: string, scopes: string[], request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        register: (client_id: string, emailAddress: string, username: string, password: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        resetPassword: (client_id: string, username: string, password: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        sendForgotPasswordEmail: (client_id: string, username: string, resetPasswordUrl: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        sendVerificationEmail: (client_id: string, emailAddress: string, username: string, verificationUrl: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        validateAccessToken: (access_token: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
+        validateCode: (code: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
         validateCredentials: (clientId: string, username: string, password: string) => {
             return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
                 winston.info(`validateCredentials('${clientId}', '${username}', '${password}')`);
@@ -113,7 +121,9 @@ app.use('/auth', OAuth2FrameworkRouter(
                 });
             });
         },
-        verify: null,
+        verify: (client_id: string, username: string, request: express.Request) => {
+            return Promise.resolve(null);
+        },
     },
     path.join(__dirname, 'views/login.handlebars'),
     null,
@@ -125,6 +135,7 @@ app.use('/auth', OAuth2FrameworkRouter(
     null,
     null,
     null,
+    'rRUz_NC^2qb=X8Xt7BRj',
 ));
 
 

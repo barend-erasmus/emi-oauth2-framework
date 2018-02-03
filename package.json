@@ -2,10 +2,9 @@
   "name": "emi-oauth2-framework",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "tsc & node ./src/app.js",
-    "deploy": "tsc & ssh-deployer -f deploy.json --host 192.168.46.112 --username username --password password --workspace ./"
+    "deploy": "tsc & ssh-deployer -f deploy.json --host 192.168.46.112 --username username --password password --workspace ./",
+    "start": "tsc & gulp build & node ./dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -23,13 +22,15 @@
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "express-winston": "^2.4.0",
-    "oauth2-framework": "^0.4.1",
+    "oauth2-framework": "^2.0.4",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "winston": "^2.3.1",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "@types/node": "^8.0.20"
+    "@types/express": "^4.11.1",
+    "@types/node": "^8.0.20",
+    "gulp": "^3.9.1"
   }
 }

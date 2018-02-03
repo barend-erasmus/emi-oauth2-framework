@@ -1,6 +1,4 @@
 // http://localhost:3000/auth/authorize?response_type=code&client_id=0zyrWYATtw&redirect_uri=http://localhost:3000/auth/passport/callback&state=40335
-
-// Imports
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as path from 'path';
@@ -8,10 +6,10 @@ import * as yargs from 'yargs';
 import * as request from 'request-promise';
 import * as cors from 'cors';
 import * as winston from 'winston';
-
+import * as jsonwebtoken from 'jsonwebtoken';
 import * as ActiveDirectory from 'activedirectory';
-
-import { Client, OAuth2FrameworkRouter } from 'oauth2-framework';
+import { Client, OAuth2FrameworkRouter, OAuth2FrameworkError } from 'oauth2-framework';
+import { Token } from 'oauth2-framework/dist/models/token';
 
 const argv = yargs.argv;
 const app = express();
@@ -20,7 +18,6 @@ winston.add(winston.transports.File, { filename: path.join(__dirname, 'emi-oauth
 
 app.set('trust proxy', true);
 
-// Configures middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -72,44 +69,79 @@ app.use('/auth', OAuth2FrameworkRouter(
                 return Promise.resolve(null);
             }
         },
-        generateAccessToken: (client_id: string, username: string, scopes: string[], request: express.Request) => {
+        generateAccessToken: (client_id: string, userName: string, scopes: string[], request: express.Request) => {
+            const token = jsonwebtoken.sign({
+                client_id,
+                scopes,
+                type: 'access-token',
+                userName,
+             }, 'rRUz_NC^2qb=X8Xt7BRj');
+
+            return Promise.resolve(token);
+        },
+        generateCode: (client_id: string, userName: string, scopes: string[], request: express.Request) => {
+            const code = jsonwebtoken.sign({
+                client_id,
+                scopes,
+                type: 'code',
+                userName,
+             }, 'rRUz_NC^2qb=X8Xt7BRj');
+
+            return Promise.resolve(code);
+        },
+        register: (client_id: string, emailAddress: string, userName: string, password: string, request: express.Request) => {
             return Promise.resolve(null);
         },
-        generateCode: (client_id: string, username: string, scopes: string[], request: express.Request) => {
+        resetPassword: (client_id: string, userName: string, password: string, request: express.Request) => {
             return Promise.resolve(null);
         },
-        register: (client_id: string, emailAddress: string, username: string, password: string, request: express.Request) => {
+        sendForgotPasswordEmail: (client_id: string, userName: string, resetPasswordUrl: string, request: express.Request) => {
             return Promise.resolve(null);
         },
-        resetPassword: (client_id: string, username: string, password: string, request: express.Request) => {
-            return Promise.resolve(null);
-        },
-        sendForgotPasswordEmail: (client_id: string, username: string, resetPasswordUrl: string, request: express.Request) => {
-            return Promise.resolve(null);
-        },
-        sendVerificationEmail: (client_id: string, emailAddress: string, username: string, verificationUrl: string, request: express.Request) => {
+        sendVerificationEmail: (client_id: string, emailAddress: string, userName: string, verificationUrl: string, request: express.Request) => {
             return Promise.resolve(null);
         },
         validateAccessToken: (access_token: string, request: express.Request) => {
-            return Promise.resolve(null);
+
+            const decodedToken = jsonwebtoken.decode(access_token);
+
+            if (decodedToken.type !== 'access-token') {
+                throw new OAuth2FrameworkError('invalid_access_token', 'Invalid Access Token');
+            }
+            
+            return Promise.resolve(new Token(
+                decodedToken.client_id,
+                decodedToken.userName,
+                decodedToken.scopes,
+            ));
         },
         validateCode: (code: string, request: express.Request) => {
-            return Promise.resolve(null);
+            const decodedToken = jsonwebtoken.decode(code);
+
+            if (decodedToken.type !== 'code') {
+                throw new OAuth2FrameworkError('invalid_code', 'Invalid Code');
+            }
+            
+            return Promise.resolve(new Token(
+                decodedToken.client_id,
+                decodedToken.userName,
+                decodedToken.scopes,
+            ));
         },
-        validateCredentials: (clientId: string, username: string, password: string) => {
+        validateCredentials: (clientId: string, userName: string, password: string) => {
             return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
-                winston.info(`validateCredentials('${clientId}', '${username}', '${password}')`);
+                winston.info(`validateCredentials('${clientId}', '${userName}', '${password}')`);
 
                 const configuration = {
                     url: 'ldap://EUROCT1.euromonitor.local',
                     baseDN: 'dc=euromonitor,dc=local',
-                    username: `${username}@euromonitor.local`,
+                    userName: `${userName}@euromonitor.local`,
                     password,
                 };
 
                 const ad = new ActiveDirectory(configuration);
 
-                ad.authenticate(`${username}@euromonitor.local`, password, (err: Error, auth: any) => {
+                ad.authenticate(`${userName}@euromonitor.local`, password, (err: Error, auth: any) => {
                     if (err) {
                         resolve(false);
                     } else if (auth) {
@@ -121,7 +153,7 @@ app.use('/auth', OAuth2FrameworkRouter(
                 });
             });
         },
-        verify: (client_id: string, username: string, request: express.Request) => {
+        verify: (client_id: string, userName: string, request: express.Request) => {
             return Promise.resolve(null);
         },
     },
@@ -189,7 +221,7 @@ app.get('/auth/passport/callback', async (req: express.Request, res: express.Res
         uri: `${trinityApiUri}/api/auth/token`,
         body: {
             SubscriberId: req.query.state,
-            Username: `EURO_NT\\${response2.body.username}`,
+            Username: `EURO_NT\\${response2.body.userName}`,
             ApplicationId: 1,
         },
         json: true,

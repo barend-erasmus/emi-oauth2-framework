@@ -22,6 +22,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.4",
     "express-winston": "^2.4.0",
+    "jsonwebtoken": "^8.1.1",
     "oauth2-framework": "^2.0.4",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",

@@ -5,27 +5,15 @@
         "password": "$password"
     },
     "commands": [
-        "sudo apt-get update",
-        "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
-        "sudo apt-get install -y nodejs",
-
-        "npm install pm2 -g",
-
-        "mkdir /logs",
         "npm --prefix /opt/emi-oauth2-framework install",
         "pm2 stop emi-oauth2-framework",
-        "pm2 start /opt/emi-oauth2-framework/src/app.js --name emi-oauth2-framework -- --prod --port 8080"
+        "pm2 start /opt/emi-oauth2-framework/app.js --name emi-oauth2-framework -- --prod --port 8080"
     ],
     "directories": [
         {
-            "source": "$workspace/src",
-            "destination": "/opt/emi-oauth2-framework/src"
+            "source": "$workspace/dist",
+            "destination": "/opt/emi-oauth2-framework"
         }
     ],
-    "files": [
-        {
-            "source": "$workspace/package.json",
-            "destination": "/opt/emi-oauth2-framework/package.json"
-        }
-    ]
+    "files": []
 }

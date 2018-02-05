@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "deploy": "tsc & ssh-deployer -f deploy.json --host 192.168.46.112 --username username --password password --workspace ./",
-    "start": "tsc & gulp build & node ./dist/app.js"
+    "deploy": "tsc & ssh-deployer -f deploy.json --host 192.168.46.112 --username administrator --password Eur0m0nit0r --workspace ./",
+    "debug": "tsc & gulp build & node ./dist/app.js",
+    "start": "node ./app.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/node": "^8.0.20",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "run-sequence": "^2.2.1"
   }
 }

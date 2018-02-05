@@ -133,15 +133,15 @@ app.use('/auth', OAuth2FrameworkRouter(
                 winston.info(`validateCredentials('${clientId}', '${userName}', '${password}')`);
 
                 const configuration = {
-                    url: 'ldap://EUROCT1.euromonitor.local',
+                    url: 'ldap://euromonitor.local',
                     baseDN: 'dc=euromonitor,dc=local',
-                    userName: `${userName}@euromonitor.local`,
+                    userName: `${userName}`,
                     password,
                 };
 
                 const ad = new ActiveDirectory(configuration);
 
-                ad.authenticate(`${userName}@euromonitor.local`, password, (err: Error, auth: any) => {
+                ad.authenticate(`${userName}`, password, (err: Error, auth: any) => {
                     if (err) {
                         resolve(false);
                     } else if (auth) {
